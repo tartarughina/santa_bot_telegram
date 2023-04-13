@@ -2,6 +2,7 @@ from telegram import __version__ as TG_VER
 import config
 import re
 from config import Config
+import secret
 
 
 try:
@@ -52,7 +53,7 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 def main() -> None:
-    application = Application.builder().token(config.TOKEN).build()
+    application = Application.builder().token(secret.TOKEN).build()
 
     # on different commands - answer in Telegram
     #application.add_handler(CommandHandler("start", start))

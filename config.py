@@ -1,8 +1,6 @@
 import bisect
 from random import randint, random
 
-TOKEN="6081874952:AAFKbcDYhihq6BUoYSbYV04DvELnc09nlm8"
-
 class Config:
     def __init__(self) -> None:
         self.tot_prob = 0
