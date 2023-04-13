@@ -1,5 +1,4 @@
 from telegram import __version__ as TG_VER
-import config
 import re
 from config import Config
 import secret
