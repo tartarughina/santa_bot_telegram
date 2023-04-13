@@ -19,6 +19,8 @@ if __version_info__ < (20, 0, 0, "alpha", 1):
 from telegram import ForceReply, Update
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 
+conf = Config()
+
 def santa_egg(sentence) -> bool:
     return re.search("s.*a.*n.*t.*a", sentence)
 
@@ -43,13 +45,13 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     for trigger in Config.TRIGGERS:
         if trigger in msg:
-            await update.message.reply_text(prep_reply())
+            await update.message.reply_text(conf.prep_reply())
             return 
 
     nominated = santa_egg(msg)
 
     if nominated: 
-        await update.message.reply_text(f"Non lo sapevi ma mi hai nominato `{nominated.group()}`, eccoti una citazione `{get_citation()}`")
+        await update.message.reply_text(f"Non lo sapevi ma mi hai nominato `{nominated.group()}`, eccoti una citazione `{conf.get_citation()}`")
 
 
 def main() -> None:
