@@ -18,6 +18,7 @@ if __version_info__ < (20, 0, 0, "alpha", 1):
 from telegram import ForceReply, Update
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 
+# class with the stuff
 conf = Config()
 
 def santa_egg(sentence) -> bool:
