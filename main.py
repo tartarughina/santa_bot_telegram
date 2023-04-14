@@ -49,8 +49,12 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             return
         
     if "non mi chiamo" in msg:
-        for name in santa.game_name():
-            await update.message.reply_text(name)
+        names = santa.game_name()
+        res = await update.message.reply_text(names[0])
+
+        for name in names[1:]:
+            res = await res.message.reply_text(name)
+
         return
 
     for trigger in Santa.TRIGGERS:
