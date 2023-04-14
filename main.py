@@ -53,7 +53,7 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         res = await update.message.reply_text(names[0])
 
         for name in names[1:]:
-            res = await res.message.reply_text(name)
+            res = await res.reply_text(name)
 
         return
 
