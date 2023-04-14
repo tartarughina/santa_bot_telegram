@@ -1,5 +1,4 @@
 from telegram import __version__ as TG_VER
-import re
 from santa import Santa
 import secret
 
@@ -20,9 +19,6 @@ from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandl
 
 # class with the stuff
 santa = Santa()
-
-def santa_egg(sentence) -> bool:
-    return re.search("s.*a.*n.*t.*a", sentence)
 
 # Define a few command handlers. These usually take the two arguments update and
 # context.
@@ -64,10 +60,10 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             await update.message.reply_text(santa.prep_reply())
             return 
 
-    nominated = santa_egg(msg)
+    found = santa.santa_egg(msg)
 
-    if nominated: 
-        await update.message.reply_text(f"Non lo sapevi ma mi hai nominato `{nominated.group()}`, eccoti una citazione `{santa.get_citation()}`")
+    if found: 
+        await update.message.reply_text(f"Non lo sapevi ma mi hai nominato `{found}`, eccoti una citazione `{santa.get_citation()}`")
 
 
 def main() -> None:

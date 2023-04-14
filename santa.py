@@ -1,5 +1,7 @@
 import bisect
 from random import randint, random
+import re
+from typing import Tuple
 
 class Santa:
     def __init__(self) -> None:
@@ -14,6 +16,30 @@ class Santa:
         self.cdf()
 
         pass
+
+    def santa_egg(sentence) -> None | str:
+        res: re.Match = re.search("s.*?a.*?n.*?t.*?a", sentence)
+
+        if res:
+            indexes = []
+            app: str = res.group()
+            last = 0
+
+            for char in "santa":
+                last = app.index(char, last)
+
+                indexes.append(last)
+
+            ret: str = ""
+            for i in range(len(app)):
+                if i in indexes:
+                    ret += app[i].upper()
+                else:
+                    ret += app[i]
+            
+            return ret
+        else:
+            return None
 
     def get_citation(self) -> str:
         return Santa.CITATIONS[randint(0, len(Santa.CITATIONS) - 1)]
@@ -34,7 +60,7 @@ class Santa:
         bound = randint(1, 5)
         trials = []
         i = 0
-        
+
         while i < bound:
             name = self.get_rand_name()
 
