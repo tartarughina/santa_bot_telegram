@@ -1,6 +1,6 @@
 from telegram import __version__ as TG_VER
 import re
-from config import Config
+from santa import Santa
 import secret
 
 
@@ -19,7 +19,7 @@ from telegram import ForceReply, Update
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 
 # class with the stuff
-conf = Config()
+santa = Santa()
 
 def santa_egg(sentence) -> bool:
     return re.search("s.*a.*n.*t.*a", sentence)
@@ -43,15 +43,15 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     msg = update.message.text.lower()
 
-    for trigger in Config.TRIGGERS:
+    for trigger in Santa.TRIGGERS:
         if trigger in msg:
-            await update.message.reply_text(conf.prep_reply())
+            await update.message.reply_text(santa.prep_reply())
             return 
 
     nominated = santa_egg(msg)
 
     if nominated: 
-        await update.message.reply_text(f"Non lo sapevi ma mi hai nominato `{nominated.group()}`, eccoti una citazione `{conf.get_citation()}`")
+        await update.message.reply_text(f"Non lo sapevi ma mi hai nominato `{nominated.group()}`, eccoti una citazione `{santa.get_citation()}`")
 
 
 def main() -> None:
@@ -60,6 +60,7 @@ def main() -> None:
     # on different commands - answer in Telegram
     #application.add_handler(CommandHandler("start", start))
     #application.add_handler(CommandHandler("help", help_command))
+    #application.add_handler(CommandHandler("quit", stop_toggle))
 
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 

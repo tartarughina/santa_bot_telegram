@@ -1,13 +1,13 @@
 import bisect
 from random import randint, random
 
-class Config:
+class Santa:
     def __init__(self) -> None:
         self.tot_prob = 0
         self.distr = []
 
          # update the total probability at startup
-        for x in Config.NAMES:
+        for x in Santa.NAMES:
             self.tot_prob += x.get("probability")
 
         # set the distribution of the available names
@@ -16,16 +16,16 @@ class Config:
         pass
 
     def get_citation(self) -> str:
-        return Config.CITATIONS[randint(0, len(Config.CITATIONS) - 1)]
+        return Santa.CITATIONS[randint(0, len(Santa.CITATIONS) - 1)]
     
     def cdf(self) -> None:
         cumsum = 0
-        for w in Config.NAMES:
+        for w in Santa.NAMES:
             cumsum += w.get("probability")
             self.distr.append(cumsum / self.tot_prob)
 
     def get_rand_name(self) -> str:    
-        return Config.NAMES[bisect.bisect(self.distr, random())].get("name")
+        return Santa.NAMES[bisect.bisect(self.distr, random())].get("name")
 
     def prep_reply(self) -> str:
         return f"{self.get_citation()} mh... {self.get_rand_name()}"
