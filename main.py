@@ -50,10 +50,12 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         
     if "non mi chiamo" in msg:
         names = santa.game_name()
-        res = await update.message.reply_text(names[0])
+        res = await update.message.reply_text(f"{names[0]}?")
 
-        for name in names[1:]:
-            res = await res.reply_text(name)
+        for name in names[1:-2]:
+            res = await res.reply_text(f"{name}?")
+
+        await res.reply_text(f"Sarai {names[-1]}")
 
         return
 
