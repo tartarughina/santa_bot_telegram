@@ -45,11 +45,12 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     for trigger in Santa.GREATINGS:
         if trigger in msg:
-            await update.message.reply_text(f"{msg} {santa.get_rand_name()}!")
+            await update.message.reply_text(f"{update.message.text} {santa.get_rand_name()}!")
             return
         
     if "non mi chiamo" in msg:
-        await update.message.reply_text(f"Oh... {santa.get_rand_name()}... {santa.get_rand_name()}... {santa.get_rand_name()}...")
+        for name in santa.game_name():
+            await update.message.reply_text(name)
         return
 
     for trigger in Santa.TRIGGERS:

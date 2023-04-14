@@ -30,6 +30,20 @@ class Santa:
     def prep_reply(self) -> str:
         return f"{self.get_citation()} mh... {self.get_rand_name()}"
     
+    def game_name(self):
+        bound = randint(1, 5)
+        trials = []
+        i = 0
+        
+        while i < bound:
+            name = self.get_rand_name()
+
+            if name not in trials:
+                trials.append(name)
+                i+=1
+
+        return trials
+    
     GREATINGS = [
         "ciao",
         "buongiorno",
@@ -41,8 +55,7 @@ class Santa:
     CITATIONS = [
         "That's it, end of the story", 
         "Bless you", 
-        "Wendy's triple bacon...", 
-        "Crincio",
+        "Wendy's triple bacon...",
         "UIC - University of Indians and Chineses",
         "Thanks for playing with us... but no",
         "Join our coult... Join NECSTLab",
@@ -52,7 +65,8 @@ class Santa:
         "Have a nice weekend even though it's wednedsay",
         "Awesome",
         "Super awesome",
-        "At the end of the day"
+        "At the end of the day",
+        "It's a kind of game name"
     ]
 
     TRIGGERS = [
