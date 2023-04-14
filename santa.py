@@ -30,6 +30,14 @@ class Santa:
     def prep_reply(self) -> str:
         return f"{self.get_citation()} mh... {self.get_rand_name()}"
     
+    GREATINGS = [
+        "ciao",
+        "buongiorno",
+        "ehi",
+        "ehy",
+        "buonanotte"
+    ]
+    
     CITATIONS = [
         "That's it, end of the story", 
         "Bless you", 
@@ -58,6 +66,7 @@ class Santa:
         "uslenghi",
         "piergiorgio",
         "visa",
+        "illinois"
     ]
 
     NAMES = [

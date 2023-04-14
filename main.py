@@ -43,6 +43,15 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     msg = update.message.text.lower()
 
+    for trigger in Santa.GREATINGS:
+        if trigger in msg:
+            await update.message.reply_text(f"{msg} {santa.get_rand_name()}!")
+            return
+        
+    if "non mi chiamo" in msg:
+        await update.message.reply_text(f"Oh... {santa.get_rand_name()}... {santa.get_rand_name()}... {santa.get_rand_name()}...")
+        return
+
     for trigger in Santa.TRIGGERS:
         if trigger in msg:
             await update.message.reply_text(santa.prep_reply())
