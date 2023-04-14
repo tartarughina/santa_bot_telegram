@@ -17,7 +17,7 @@ class Santa:
 
         pass
 
-    def santa_egg(sentence) -> None | str:
+    def santa_egg(self, sentence) -> None | str:
         res: re.Match = re.search("s.*?a.*?n.*?t.*?a", sentence)
 
         if res:
