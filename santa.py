@@ -87,7 +87,7 @@ class Santa:
         "Wendy's triple bacon...",
         "UIC - University of Indians and Chineses",
         "Thanks for playing with us... but no",
-        "Join our coult... Join NECSTLab",
+        "Join our cult... Join NECSTLab",
         "Can we do better?",
         "Shut",
         "We're going to do science",
