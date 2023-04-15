@@ -60,10 +60,10 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             await update.message.reply_text(santa.prep_reply())
             return 
 
-    found = santa.santa_egg(msg)
+    found = santa.santa_egg(msg, bold=True)
 
     if found: 
-        await update.message.reply_text(f"Non lo sapevi ma mi hai nominato `{found}`, eccoti una citazione `{santa.get_citation()}`")
+        await update.message.reply_text(f"Non lo sapevi ma mi hai nominato `{found}`, eccoti una citazione `{santa.get_citation()}`", parse_mode='HTML')
 
 
 def main() -> None:

@@ -17,7 +17,7 @@ class Santa:
 
         pass
 
-    def santa_egg(self, sentence) -> None | str:
+    def santa_egg(self, sentence, bold=False) -> None | str:
         res: re.Match = re.search("s.*?a.*?n.*?t.*?a", sentence)
 
         if res:
@@ -33,7 +33,10 @@ class Santa:
             ret: str = ""
             for i in range(len(app)):
                 if i in indexes:
-                    ret += app[i].upper()
+                    if bold:
+                        ret += f"<b>{app[i].upper()}</b>"
+                    else:
+                        ret += app[i].upper()
                 else:
                     ret += app[i]
             
@@ -57,7 +60,7 @@ class Santa:
         return f"{self.get_citation()} mh... {self.get_rand_name()}"
     
     def game_name(self):
-        bound = randint(1, 5)
+        bound = randint(2, 5)
         trials = []
         i = 0
 
