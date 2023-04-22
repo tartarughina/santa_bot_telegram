@@ -29,14 +29,20 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await update.message.reply_text("Help!")
 
 async def stop_toggle(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    status.stop()
+    if status.running:
+        status.stop()
 
-    await update.message.reply_text("Pausa, se avete bisogno chiedete a Matteo")
+        await update.message.reply_text("Pausa, se avete bisogno chiedete a Matteo")
+    else:
+        await update.message.reply_text("Ragazzi sto facendo pausa, avete Matteo a cui chiedere")
 
 async def start_toggle(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    status.restart()
+    if not status.running:
+        status.restart()
 
-    await update.message.reply_text("Sono tornato! Dove sono gli HPPS?")
+        await update.message.reply_text("Sono tornato! Dove sono gli HPPS?")
+    else:
+        await update.message.reply_text("Sto parlando, non interrompere")
 
 async def status_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     res = status.get_status()
