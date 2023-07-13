@@ -7,6 +7,7 @@ class Santa:
     def __init__(self) -> None:
         self.tot_prob = 0
         self.distr = []
+        self.response_probability = 100
 
          # update the total probability at startup
         for x in Santa.NAMES:
@@ -72,6 +73,9 @@ class Santa:
                 i+=1
 
         return trials
+    
+    def set_probability(self, probability: int) -> None:
+        self.response_probability = probability
     
     GREATINGS = [
         "ciao",

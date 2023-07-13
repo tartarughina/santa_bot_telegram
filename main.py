@@ -3,6 +3,7 @@ from santa import Santa
 import secret
 from status import Status
 import time
+from random import randint
 
 
 try:
@@ -51,13 +52,23 @@ async def status_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     text += f"Santa è arrivato alle {time.ctime(res[1])}\n"
 
     if res[2]:
-        text += f"E' ha fatto pausa alle {time.ctime(res[2])}\n"
+        text += f"E ha fatto pausa alle {time.ctime(res[2])}\n"
 
     if res[3]:
         text += f"E' tornato alle {time.ctime(res[3])}"
 
     await update.message.reply_text(text)
 
+async def probability_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    print(update.message)
+
+    # code to extract the probability from the message
+
+    probability = 0
+
+    santa.set_probability(probability)
+
+    return
 
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not status.running:
@@ -65,22 +76,28 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     
     msg = update.message.text.lower()
 
+    # since santa_bot is a good guy  he always replies to greetings
     for trigger in Santa.GREATINGS:
         if trigger in msg:
-            await update.message.reply_text(f"{update.message.text} {santa.get_rand_name()}!")
+            await update.message.reply_text(f"{trigger} {santa.get_rand_name()}!")
             return
-        
+    
+    # the same goes when addressed directly
     if "non mi chiamo" in msg:
         names = santa.game_name()
-        res = await update.message.reply_text(f"{names[0]}?")
+        await update.message.reply_text(f"{names[0]}?")
 
         for name in names[1:-2]:
-            res = await res.reply_text(f"{name}?")
+            await update.message.reply_text(f"{name}?")
 
-        await res.reply_text(f"Sarai {names[-1]}")
+        await update.message.reply_text(f"Sarai {names[-1]}")
 
         return
 
+    # probabilistic reply from here
+    if randint(0, 100) > santa.response_probability:
+        return
+    
     for trigger in Santa.TRIGGERS:
         if trigger in msg:
             await update.message.reply_text(santa.prep_reply())
@@ -89,7 +106,7 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     found = santa.santa_egg(msg, bold=True)
 
     if found: 
-        await update.message.reply_text(f"Non lo sapevi ma mi hai nominato `{found}`, eccoti una citazione `{santa.get_citation()}`", parse_mode='HTML')
+        await update.message.reply_text(f"`{found}`, eccoti una citazione `{santa.get_citation()}`", parse_mode='HTML')
 
 
 def main() -> None:
@@ -99,6 +116,7 @@ def main() -> None:
     application.add_handler(CommandHandler("stop", stop_toggle))
     application.add_handler(CommandHandler("start", start_toggle))
     application.add_handler(CommandHandler("status", status_command))
+    application.add_handler(CommandHandler("probability", probability_command))
 
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
