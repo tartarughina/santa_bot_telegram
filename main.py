@@ -73,6 +73,27 @@ async def probability_command(update: Update, context: ContextTypes.DEFAULT_TYPE
 
     return
 
+async def text_reply(update: Update, context: ContextTypes.DEFAULT_TYPE, msg: str) -> None:
+    for trigger in Santa.TRIGGERS:
+        if trigger in msg:
+            await update.message.reply_text(santa.prep_reply())
+            return 
+
+    found = santa.santa_egg(msg, bold=True)
+
+    if found: 
+        await update.message.reply_text(f"`{found}`, eccoti una citazione `{santa.get_citation()}`", parse_mode='HTML')
+
+async def image_reply(update: Update, context: ContextTypes.DEFAULT_TYPE, msg: str) -> None:
+    # await update.message.send_document(document=open('meme/1.jpg', 'rb'))
+    await update.message.reply_text("A breve questo messaggio sara' un meme")
+    return
+
+async def audio_reply(update: Update, context: ContextTypes.DEFAULT_TYPE, msg: str) -> None:
+    # await update.message.send_document(document=open('audio/1.wav', 'rb'))
+    await update.message.reply_text("A breve questo messaggio sara' un audio")
+    return
+
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not status.running:
         return 
@@ -100,16 +121,14 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # probabilistic reply from here
     if randint(0, 100) > santa.response_probability:
         return
-    
-    for trigger in Santa.TRIGGERS:
-        if trigger in msg:
-            await update.message.reply_text(santa.prep_reply())
-            return 
+    reply_mode = randint(0, 2)
 
-    found = santa.santa_egg(msg, bold=True)
-
-    if found: 
-        await update.message.reply_text(f"`{found}`, eccoti una citazione `{santa.get_citation()}`", parse_mode='HTML')
+    if reply_mode == 0:
+        await text_reply(update, context, msg)
+    elif reply_mode == 1:
+        await image_reply(update, context, msg)
+    else:
+        await audio_reply(update, context, msg)
 
 
 def main() -> None:
