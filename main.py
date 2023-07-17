@@ -60,13 +60,16 @@ async def status_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     await update.message.reply_text(text)
 
 async def probability_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    print(update.message)
-
-    # code to extract the probability from the message
-
-    probability = 0
-
-    santa.set_probability(probability)
+    if len(context.args) >= 1:
+        try:
+            probability = int(context.args[0])
+            santa.set_probability(probability)
+            await update.message.reply_text(f"Probabilita' impostata a {probability}")
+        except ValueError:
+            await update.message.reply_text("Non mi sembra un numero")
+            return
+    else:  
+        await update.message.reply_text("Mi serve un numero")
 
     return
 
