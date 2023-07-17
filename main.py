@@ -63,11 +63,15 @@ async def probability_command(update: Update, context: ContextTypes.DEFAULT_TYPE
     if len(context.args) >= 1:
         try:
             probability = int(context.args[0])
-            santa.set_probability(probability)
-            await update.message.reply_text(f"Probabilita' impostata a {probability}")
+
+            if probability >= 0 and probability <= 100:
+                santa.set_probability(probability)
+                await update.message.reply_text(f"Probabilita' impostata a {probability}")
+            else:  
+                await update.message.reply_text("La probabilita' deve essere un numero tra 0 e 100")
+            
         except ValueError:
             await update.message.reply_text("Non mi sembra un numero")
-            return
     else:  
         await update.message.reply_text("Mi serve un numero")
 
@@ -85,12 +89,12 @@ async def text_reply(update: Update, context: ContextTypes.DEFAULT_TYPE, msg: st
         await update.message.reply_text(f"`{found}`, eccoti una citazione `{santa.get_citation()}`", parse_mode='HTML')
 
 async def image_reply(update: Update, context: ContextTypes.DEFAULT_TYPE, msg: str) -> None:
-    # await update.message.send_document(document=open('meme/1.jpg', 'rb'))
-    await update.message.reply_text("A breve questo messaggio sara' un meme")
+    await update.message.reply_photo(photo=open('meme/meme_001.jpeg', 'rb'))
+
     return
 
 async def audio_reply(update: Update, context: ContextTypes.DEFAULT_TYPE, msg: str) -> None:
-    # await update.message.send_document(document=open('audio/1.wav', 'rb'))
+    # await update.message.reply_audio(document=open('audio/1.wav', 'rb'))
     await update.message.reply_text("A breve questo messaggio sara' un audio")
     return
 
