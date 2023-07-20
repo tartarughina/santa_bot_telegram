@@ -173,7 +173,7 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not status.running:
         return
     
-    if update.message.from_user.username == "@Biba_8":
+    if update.message.from_user.username == "Biba_8":
         await update.message.reply_text("Piras sei un pirla")
     
     msg = update.message.text.lower()
