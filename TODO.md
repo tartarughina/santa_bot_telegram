@@ -9,4 +9,7 @@
 - ~~Implement a JSON file and handler to save the telegram id of images and files to reduce the number of repeated element sent~~
 
 ## Minor fixes/addon
-- Command to add images and audios
+- ~~Command to add images and audios~~
+- Refactor to clean the main file
+    - Divide the commands from the other handlers
+    - Does reference work in python?

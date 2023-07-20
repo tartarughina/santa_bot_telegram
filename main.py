@@ -171,7 +171,10 @@ async def audio_reply(update: Update, context: ContextTypes.DEFAULT_TYPE, msg: s
 
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not status.running:
-        return 
+        return
+    
+    if update.message.from_user.username == "@Biba_8":
+        await update.message.reply_text("Piras sei un pirla")
     
     msg = update.message.text.lower()
 
@@ -191,7 +194,7 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
         await update.message.reply_text(f"Sarai {names[-1]}")
 
-        return
+        return 
 
     # probabilistic reply from here
     if randint(0, 100) > santa.response_probability:
