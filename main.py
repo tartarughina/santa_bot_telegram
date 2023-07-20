@@ -1,10 +1,11 @@
-from telegram import __version__ as TG_VER
+from telegram import Bot, File, __version__ as TG_VER
 from santa import Santa
 import secret
 from status import Status
 import time
 from random import randint
-
+from telegram import ForceReply, Update
+from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 
 try:
     from telegram import __version_info__
@@ -17,8 +18,7 @@ if __version_info__ < (20, 0, 0, "alpha", 1):
         f"{TG_VER} version of this example, "
         f"visit https://docs.python-telegram-bot.org/en/v{TG_VER}/examples.html"
     )
-from telegram import ForceReply, Update
-from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
+
 
 # class with the stuff
 santa = Santa()
@@ -77,17 +77,63 @@ async def probability_command(update: Update, context: ContextTypes.DEFAULT_TYPE
 
     return
 
+async def test_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    print(update.message)
+
+async def download_image(file: File) -> None:
+    await file.download_to_drive(f"meme/{file.file_path.split('/')[-1]}")
+
+    santa.insert_photo(file.file_path.split('/')[-1], file.file_id)
+
+async def download_audio(file: File) -> None:
+    await file.download_to_drive(f"audio/{file.file_path.split('/')[-1]}")
+
+    santa.insert_audio(file.file_path.split('/')[-1], file.file_id)
+
+async def insert_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    try:
+        await download_image(await update.message.effective_attachment[-1].get_file())
+
+        await update.message.reply_text("Immagine salvata")
+    except:
+        await update.message.reply_text("Ho avuto problemi a salvare l'immagine")
+
+async def insert_audio(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    try:   
+        await download_audio( await update.message.effective_attachment.get_file())
+
+        await update.message.reply_text("Audio salvato")
+    except:
+        await update.message.reply_text("Ho avuto problemi a salvare l'audio")
+
+async def save_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    type = None
+
+    if isinstance(update.message.reply_to_message.effective_attachment, tuple):
+        type = "image"
+    else :
+        type = update.message.reply_to_message.effective_attachment.mime_type.split('/')[0]
+
+    try:
+        if type == "image":
+            await download_image(await update.message.reply_to_message.effective_attachment[-1].get_file())
+
+            await update.message.reply_text("Immagine salvata")
+        elif type == "audio":
+            await download_audio(await update.message.reply_to_message.effective_attachment.get_file())
+
+            await update.message.reply_text("Audio salvato")
+        else:
+            await update.message.reply_text("Non mi sembra un audio o un'immagine")
+    except Exception as e:
+        print(e)
+        await update.message.reply_text("Non mi sembra un audio o un'immagine")
+
 # text replies
 async def text_reply(update: Update, context: ContextTypes.DEFAULT_TYPE, msg: str) -> None:
-    for trigger in Santa.TRIGGERS:
-        if trigger in msg:
-            await update.message.reply_text(santa.prep_reply())
-            return 
-
-    found = santa.santa_egg(msg, bold=True)
-
-    if found: 
-        await update.message.reply_text(f"`{found}`, eccoti una citazione `{santa.get_citation()}`", parse_mode='HTML')
+    await update.message.reply_text(santa.prep_reply())
+    
+    return
 
 # photo replies
 async def image_reply(update: Update, context: ContextTypes.DEFAULT_TYPE, msg: str) -> None:
@@ -143,14 +189,24 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # probabilistic reply from here
     if randint(0, 100) > santa.response_probability:
         return
-    reply_mode = randint(0, 2)
+    
+    for trigger in Santa.TRIGGERS:
+        if trigger in msg:
+            reply_mode = randint(0, 2)
 
-    if reply_mode == 0:
-        await text_reply(update, context, msg)
-    elif reply_mode == 1:
-        await image_reply(update, context, msg)
-    else:
-        await audio_reply(update, context, msg)
+            if reply_mode == 0:
+                await text_reply(update, context, msg)
+            elif reply_mode == 1:
+                await image_reply(update, context, msg)
+            else:
+                await audio_reply(update, context, msg)
+
+            return
+
+    found = santa.santa_egg(msg, bold=True)
+
+    if found: 
+        await update.message.reply_text(f"`{found}`, eccoti una citazione `{santa.get_citation()}`", parse_mode='HTML')
 
 
 def main() -> None:
@@ -162,7 +218,10 @@ def main() -> None:
     application.add_handler(CommandHandler("status", status_command))
     application.add_handler(CommandHandler("probability", probability_command))
 
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND & ~filters.REPLY, echo))
+    application.add_handler(MessageHandler(filters.PHOTO & filters.Caption("/save"), insert_image))
+    application.add_handler(MessageHandler(filters.AUDIO & filters.Caption("/save"), insert_audio))
+    application.add_handler(MessageHandler(filters.REPLY & filters.Text("/save"), save_reply))
 
     # Run the bot until the user presses Ctrl-C
     application.run_polling()

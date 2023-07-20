@@ -111,6 +111,14 @@ class Santa:
 
             f.close()
 
+    def insert_photo(self, name: str, id: str) -> None:
+        self.photos.append({"name": name, "id": id})
+
+        with open("meme/photos.json", "w") as f:
+            json.dump(self.photos, f)
+
+            f.close()
+
     def get_audio(self) -> Tuple[int, dict]:
         index = randint(0, len(self.audio) - 1)
 
@@ -119,6 +127,14 @@ class Santa:
     
     def update_audio(self, index: int, name: str, telegram_id: str) -> None:
         self.audio[index] = {"name": name, "id": telegram_id}
+
+        with open("audio/audio.json", "w") as f:
+            json.dump(self.audio, f)
+
+            f.close()
+
+    def insert_audio(self, name: str, id: str) -> None:
+        self.audio.append({"name": name, "id": id})
 
         with open("audio/audio.json", "w") as f:
             json.dump(self.audio, f)
