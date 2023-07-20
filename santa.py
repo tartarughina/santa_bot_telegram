@@ -140,13 +140,31 @@ class Santa:
             json.dump(self.audio, f)
 
             f.close()
+
+    def reset_ids(self) -> None:
+        for photo in self.photos:
+            photo["id"] = None
+
+        for audio in self.audio:
+            audio["id"] = None
+
+        with open("meme/photos.json", "w") as f:
+            json.dump(self.photos, f)
+
+            f.close()
+
+        with open("audio/audio.json", "w") as f:
+            json.dump(self.audio, f)
+
+            f.close()
     
     GREATINGS = [
         "ciao",
         "buongiorno",
         "ehi",
         "ehy",
-        "buonanotte"
+        "buonanotte",
+        "salve"
     ]
     
     CITATIONS = [

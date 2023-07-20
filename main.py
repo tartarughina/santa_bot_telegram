@@ -55,7 +55,9 @@ async def status_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         text += f"E ha fatto pausa alle {time.ctime(res[2])}\n"
 
     if res[3]:
-        text += f"E' tornato alle {time.ctime(res[3])}"
+        text += f"E' tornato alle {time.ctime(res[3])}\n"
+
+    text += f"La probabilita' di risposta e' {santa.response_probability}%"
 
     await update.message.reply_text(text)
 
@@ -79,6 +81,11 @@ async def probability_command(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 async def test_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     print(update.message)
+
+async def reset_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    santa.reset_ids()
+
+    await update.message.reply_text("Reset effettuato")
 
 async def download_image(file: File) -> None:
     await file.download_to_drive(f"meme/{file.file_path.split('/')[-1]}")
@@ -217,6 +224,7 @@ def main() -> None:
     application.add_handler(CommandHandler("start", start_toggle))
     application.add_handler(CommandHandler("status", status_command))
     application.add_handler(CommandHandler("probability", probability_command))
+    application.add_handler(CommandHandler("reset", reset_command))
 
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND & ~filters.REPLY, echo))
     application.add_handler(MessageHandler(filters.PHOTO & filters.Caption("/save"), insert_image))
