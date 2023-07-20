@@ -1,6 +1,7 @@
 import bisect
 from random import randint, random
 import re
+import json
 from typing import Tuple
 
 class Santa:
@@ -8,6 +9,8 @@ class Santa:
         self.tot_prob = 0
         self.distr = []
         self.response_probability = 100
+        self.photos = []
+        self.audio = []
 
          # update the total probability at startup
         for x in Santa.NAMES:
@@ -16,7 +19,32 @@ class Santa:
         # set the distribution of the available names
         self.cdf()
 
+        try:
+            with open("meme/photos.json", "r") as f:
+                self.photos = json.load(f)
+
+                f.close()
+        except:
+            print("No photos found")
+
+        try:
+            with open("audio/audio.json", "r") as f:
+                self.audio = json.load(f)
+
+                f.close()
+        except:
+            print("No audio found")
+
         pass
+
+    def cdf(self) -> None:
+        cumsum = 0
+        for w in Santa.NAMES:
+            cumsum += w.get("probability")
+            self.distr.append(cumsum / self.tot_prob)
+
+    def set_probability(self, probability: int) -> None:
+        self.response_probability = probability
 
     def santa_egg(self, sentence, bold=False) -> None | str:
         res: re.Match = re.search("s.*?a.*?n.*?t.*?a", sentence)
@@ -47,12 +75,6 @@ class Santa:
 
     def get_citation(self) -> str:
         return Santa.CITATIONS[randint(0, len(Santa.CITATIONS) - 1)]
-    
-    def cdf(self) -> None:
-        cumsum = 0
-        for w in Santa.NAMES:
-            cumsum += w.get("probability")
-            self.distr.append(cumsum / self.tot_prob)
 
     def get_rand_name(self) -> str:    
         return Santa.NAMES[bisect.bisect(self.distr, random())].get("name")
@@ -60,7 +82,7 @@ class Santa:
     def prep_reply(self) -> str:
         return f"{self.get_citation()} mh... {self.get_rand_name()}"
     
-    def game_name(self):
+    def game_name(self) -> list[str]:
         bound = randint(2, 5)
         trials = []
         i = 0
@@ -73,9 +95,35 @@ class Santa:
                 i+=1
 
         return trials
+
+    # the photo JSON structure is: name, telegram_id
+    def get_photo(self) -> Tuple[int, dict]:
+        index = randint(0, len(self.photos) - 1)
+
+        # return the index of the photo and the photo itself
+        return index, self.photos[index]
     
-    def set_probability(self, probability: int) -> None:
-        self.response_probability = probability
+    def update_photo(self, index: int, name: str, telegram_id: str) -> None:
+        self.photos[index] = {"name": name, "id": telegram_id}
+
+        with open("meme/photos.json", "w") as f:
+            json.dump(self.photos, f)
+
+            f.close()
+
+    def get_audio(self) -> Tuple[int, dict]:
+        index = randint(0, len(self.audio) - 1)
+
+        # return the index of the audio and the audio itself
+        return index, self.audio[index]
+    
+    def update_audio(self, index: int, name: str, telegram_id: str) -> None:
+        self.audio[index] = {"name": name, "id": telegram_id}
+
+        with open("audio/audio.json", "w") as f:
+            json.dump(self.audio, f)
+
+            f.close()
     
     GREATINGS = [
         "ciao",

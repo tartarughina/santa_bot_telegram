@@ -77,6 +77,7 @@ async def probability_command(update: Update, context: ContextTypes.DEFAULT_TYPE
 
     return
 
+# text replies
 async def text_reply(update: Update, context: ContextTypes.DEFAULT_TYPE, msg: str) -> None:
     for trigger in Santa.TRIGGERS:
         if trigger in msg:
@@ -88,14 +89,31 @@ async def text_reply(update: Update, context: ContextTypes.DEFAULT_TYPE, msg: st
     if found: 
         await update.message.reply_text(f"`{found}`, eccoti una citazione `{santa.get_citation()}`", parse_mode='HTML')
 
+# photo replies
 async def image_reply(update: Update, context: ContextTypes.DEFAULT_TYPE, msg: str) -> None:
-    await update.message.reply_photo(photo=open('meme/meme_001.jpeg', 'rb'))
+    index, photo = santa.get_photo()
+
+    if photo["id"]:
+        await update.message.reply_photo(photo=photo["id"])
+    else:
+        res = await update.message.reply_photo(photo=open(f"meme/{photo['name']}", 'rb'))
+
+        santa.update_photo(index, photo["name"], res.photo[-1].file_id)
 
     return
 
+# audio replies
 async def audio_reply(update: Update, context: ContextTypes.DEFAULT_TYPE, msg: str) -> None:
-    # await update.message.reply_audio(document=open('audio/1.wav', 'rb'))
-    await update.message.reply_text("A breve questo messaggio sara' un audio")
+    index, audio = santa.get_audio()
+
+    # with the reply_voice everything is treated as an audio message instead of an audio file
+    if audio["id"]:
+        await update.message.reply_voice(voice=audio["id"])
+    else:
+        res = await update.message.reply_voice(voice=open(f"audio/{audio['name']}", 'rb'))
+
+        santa.update_audio(index, audio["name"], res.voice.file_id)
+    
     return
 
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
