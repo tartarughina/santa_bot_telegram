@@ -175,6 +175,9 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     
     if update.message.from_user.username == "Biba_8":
         await update.message.reply_text("Piras sei un pirla")
+
+    if update.message.from_user.username == "gabrielebozzetto":
+        await update.message.reply_text("Mi scusi, ma PERCHE'...")
     
     msg = update.message.text.lower()
 
@@ -211,12 +214,17 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             else:
                 await audio_reply(update, context, msg)
 
+            if randint(0, 100) > 80:
+                await update.message.reply_text("Sent from my iPhone")
+
             return
 
     found = santa.santa_egg(msg, bold=True)
 
     if found: 
-        await update.message.reply_text(f"`{found}`, eccoti una citazione `{santa.get_citation()}`", parse_mode='HTML')
+        #await update.message.reply_text(f"`{found}`, eccoti una citazione `{santa.get_citation()}`", parse_mode='HTML')
+        # when the easter egg is triggered the message is the same as normal
+        await update.message.reply_text(f"{santa.get_citation()}")
 
 
 def main() -> None:

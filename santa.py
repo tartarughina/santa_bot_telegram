@@ -175,8 +175,10 @@ class Santa:
         "Thanks for playing with us... but no",
         "Join our cult... Join NECSTLab",
         "Can we do better?",
-        "Shut",
+        "Shoot",
         "We're going to do science",
+        "This is a pain in the neck",
+        "It's a matter of tradeoff",
         "Have a nice weekend even though it's wednedsay",
         "Awesome",
         "Super awesome",
@@ -195,7 +197,15 @@ class Santa:
         "uslenghi",
         "piergiorgio",
         "visa",
-        "illinois"
+        "illinois",
+        "free food",
+        "gratis",
+        "cibo gratis",
+        "hooters",
+        "bbq",
+        "free mover",
+        "piano di studi",
+        "waitlist"
     ]
 
     NAMES = [
