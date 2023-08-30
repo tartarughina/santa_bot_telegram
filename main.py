@@ -214,12 +214,8 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             else:
                 await audio_reply(update, context, msg)
 
-            print("Sent from my iphone reached")
-
-            if randint(0, 100) > 80:
+            if randint(0, 100) > 70:
                 await update.message.reply_text("Sent from my iPhone")
-
-            print("Sent from my iphone surpassed")
 
             return
 
