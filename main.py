@@ -214,7 +214,7 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             else:
                 await audio_reply(update, context, msg)
 
-            if randint(0, 100) > 70:
+            if randint(0, 100) > 50:
                 await update.message.reply_text("Sent from my iPhone")
 
             return
