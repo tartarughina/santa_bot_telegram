@@ -205,7 +205,9 @@ class Santa:
         "bbq",
         "free mover",
         "piano di studi",
-        "waitlist"
+        "waitlist",
+        "america",
+        "usa",
     ]
 
     NAMES = [
