@@ -199,9 +199,12 @@ async def image_reply(
 
 # audio replies
 async def audio_reply(
-    update: Update, context: ContextTypes.DEFAULT_TYPE, msg: str
+    update: Update, context: ContextTypes.DEFAULT_TYPE, msg: str, easter: bool = False
 ) -> None:
-    index, audio = santa.get_audio()
+    if easter:
+        index, audio = santa.get_audio(santa.get_index_by_name("file_11.mp3"))
+    else:
+        index, audio = santa.get_audio()
 
     # with the reply_voice everything is treated as an audio message instead of an audio file
     if audio["id"]:
@@ -260,7 +263,7 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     for trigger in Santa.TRIGGERS:
         if trigger in msg:
             if trigger == "usa" or trigger == "america":
-                await audio_reply(update, context, msg)
+                await audio_reply(update, context, msg, easter=True)
 
             reply_mode = randint(0, 2)
 

@@ -119,8 +119,18 @@ class Santa:
 
             f.close()
 
-    def get_audio(self) -> Tuple[int, dict]:
-        index = randint(0, len(self.audio) - 1)
+    def get_index_by_name(self, name: str) -> int:
+        for index, audio_file in enumerate(self.audio):
+            if audio_file['name'] == name:
+                return index
+        
+        return 0
+
+    def get_audio(self, idx: int = -1) -> Tuple[int, dict]:
+        if idx == -1:
+            index = randint(0, len(self.audio) - 1)
+        else:
+            index = idx
 
         # return the index of the audio and the audio itself
         return index, self.audio[index]
