@@ -125,6 +125,15 @@ class Santa:
         # return the index of the audio and the audio itself
         return index, self.audio[index]
     
+    def get_audio(self, *args) -> Tuple[int, dict]:
+        if len(args) == 1:
+            index = args[0]
+        else:
+            index = randint(0, len(self.audio) - 1)
+
+        # return the index of the audio and the audio itself
+        return index, self.audio[index]
+    
     def update_audio(self, index: int, name: str, telegram_id: str) -> None:
         self.audio[index] = {"name": name, "id": telegram_id}
 
